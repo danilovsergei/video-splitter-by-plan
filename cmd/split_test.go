@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
@@ -11,23 +10,13 @@ import (
 )
 
 func TestParsePlan(t *testing.T) {
-	content := `exercise|timestamp
-forehand|1:20-5:50
-backhand|7:00-11:15
-serve|1:05:10-1:07:55
-`
-	tmpfile := filepath.Join(t.TempDir(), "plan.csv")
-	if err := os.WriteFile(tmpfile, []byte(content), 0666); err != nil {
-		t.Fatal(err)
-	}
-
 	expected := []PlanEntry{
 		{Exercise: "forehand", Timestamp: "1:20-5:50", StartTime: "1:20", EndTime: "5:50"},
 		{Exercise: "backhand", Timestamp: "7:00-11:15", StartTime: "7:00", EndTime: "11:15"},
 		{Exercise: "serve", Timestamp: "1:05:10-1:07:55", StartTime: "1:05:10", EndTime: "1:07:55"},
 	}
 
-	entries, err := parsePlan(tmpfile)
+	entries, err := parsePlan("testdata/plan.csv")
 	if err != nil {
 		t.Fatalf("parsePlan() error = %v", err)
 	}
